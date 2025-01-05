@@ -4,7 +4,7 @@
 # Terraform configuration
 
 provider "aws" {
-  region = "ap-south-1"
+  region = "us-west-2"
 }
 
 module "vpc" {
