@@ -40,4 +40,3 @@ module "ec2_instances" {
     Environment = "dev"
   }
 }
-}
