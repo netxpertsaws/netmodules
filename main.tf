@@ -40,3 +40,13 @@ module "ec2_instances" {
     Environment = "dev"
   }
 }
+module "website_s3_bucket" {
+  source = "./modules/aws-s3-static-website-bucket"
+
+  bucket_name = "robin-test"
+
+  tags = {
+    Terraform   = "true"
+    Environment = "dev"
+  }
+}
