@@ -1,0 +1,374 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  MEMBER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  INACTIVE
+  DECEASED
+}
+
+enum ActivityAction {
+  VIEW_PROFILE
+  LOGIN
+  LOGOUT
+  LOGIN_FAILED
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum AlStream {
+  MATHS
+  BIO
+  COMMERCE
+  ARTS
+  TECHNOLOGY
+  OTHER
+}
+
+enum ChangeRequestStatus {
+  OPEN
+  DONE
+  REJECTED
+}
+
+model School {
+  id        String          @id
+  slug      String          @unique
+  nameEn    String
+  nameTa    String
+  placeEn   String
+  placeTa   String
+  sortOrder Int
+  profiles  MemberProfile[]
+
+  @@index([sortOrder])
+}
+
+model User {
+  id                 String     @id @default(cuid())
+  name               String?
+  email              String     @unique
+  emailVerified      DateTime?
+  image              String?
+  passwordHash       String?
+  role               Role       @default(MEMBER)
+  status             UserStatus @default(PENDING)
+  identityNo         String?    @unique
+  locale             String     @default("en")
+  mustChangePassword Boolean    @default(false)
+  totpSecret         String?
+  totpEnabled        Boolean    @default(false)
+  failedLoginCount   Int        @default(0)
+  lockedUntil        DateTime?
+  inviteToken        String?    @unique
+  inviteExpires      DateTime?
+  rejectionReason    String?
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+
+  profile            MemberProfile?
+  accounts           Account[]
+  sessions           Session[]
+  consents           Consent[]
+  changeRequests     ChangeRequest[]
+  activityAsActor    ActivityLog[]      @relation("actor")
+  activityAsTarget   ActivityLog[]      @relation("target")
+  auditLogs          AuditLog[]
+  wishesSent         BirthdayWish[]     @relation("wisher")
+  wishesReceived     BirthdayWish[]     @relation("recipient")
+  condolences        Condolence[]
+
+  @@index([status])
+  @@index([role])
+}
+
+/// Monotonic counter. Numbers are never reused, even if a member is removed.
+model IdentityCounter {
+  id   Int @id @default(1)
+  next Int @default(1)
+}
+
+model MemberProfile {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName      String
+  fullNameTa    String?
+  nickname      String?
+  gender        String
+  dateOfBirth   DateTime  @db.Date
+  schoolId      String
+  school        School    @relation(fields: [schoolId], references: [id])
+  alStream      AlStream
+  admissionNo   String?
+  city          String
+  country       String
+  address       String?
+  mobile        String
+  whatsapp      String?
+  profession    String
+  employer      String?
+  jobTitle      String?
+  maritalStatus String
+  spouseName    String?
+  children      String?
+  about         String?
+  facebook      String?
+  linkedin      String?
+  instagram     String?
+  website       String?
+  photoKey      String?
+  visibility    Json
+  deceasedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([fullName])
+  @@index([nickname])
+  @@index([schoolId])
+  @@index([country, city])
+  @@index([profession])
+  @@index([mobile])
+}
+
+model Consent {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          String
+  noticeVersion String
+  accepted      Boolean
+  ip            String?
+  userAgent     String?
+  createdAt     DateTime @default(now())
+
+  @@index([userId, type])
+}
+
+model ChangeRequest {
+  id           String              @id @default(cuid())
+  userId       String
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message      String
+  status       ChangeRequestStatus @default(OPEN)
+  adminNote    String?
+  resolvedById String?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  @@index([status, createdAt])
+}
+
+model Event {
+  id            String        @id @default(cuid())
+  titleEn       String
+  titleTa       String
+  descriptionEn String
+  descriptionTa String
+  startsAt      DateTime
+  endsAt        DateTime?
+  location      String?
+  status        ContentStatus @default(PUBLISHED)
+  createdById   String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@index([status, startsAt])
+}
+
+model Obituary {
+  id           String        @id @default(cuid())
+  memberUserId String?
+  nameEn       String
+  nameTa       String
+  summaryEn    String
+  summaryTa    String
+  passedOn     DateTime      @db.Date
+  status       ContentStatus @default(PUBLISHED)
+  createdById  String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  condolences  Condolence[]
+
+  @@index([status, passedOn])
+}
+
+model Condolence {
+  id          String   @id @default(cuid())
+  obituaryId  String
+  obituary    Obituary @relation(fields: [obituaryId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  message     String
+  createdAt   DateTime @default(now())
+
+  @@index([obituaryId, createdAt])
+}
+
+model Achievement {
+  id           String        @id @default(cuid())
+  memberUserId String?
+  titleEn      String
+  titleTa      String
+  bodyEn       String
+  bodyTa       String
+  year         Int
+  status       ContentStatus @default(PUBLISHED)
+  createdById  String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([status, year])
+}
+
+model Memoriam {
+  id          String        @id @default(cuid())
+  nameEn      String
+  nameTa      String
+  tributeEn   String
+  tributeTa   String
+  years       String?
+  status      ContentStatus @default(PUBLISHED)
+  createdById String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  @@index([status])
+}
+
+model Album {
+  id          String        @id @default(cuid())
+  titleEn     String
+  titleTa     String
+  coverKey    String?
+  eventDate   DateTime?     @db.Date
+  status      ContentStatus @default(PUBLISHED)
+  createdById String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  photos      Photo[]
+
+  @@index([status, eventDate])
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  albumId   String
+  album     Album    @relation(fields: [albumId], references: [id], onDelete: Cascade)
+  key       String
+  captionEn String?
+  captionTa String?
+  createdAt DateTime @default(now())
+
+  @@index([albumId])
+}
+
+model BirthdayWish {
+  id         String   @id @default(cuid())
+  fromUserId String
+  from       User     @relation("wisher", fields: [fromUserId], references: [id], onDelete: Cascade)
+  toUserId   String
+  to         User     @relation("recipient", fields: [toUserId], references: [id], onDelete: Cascade)
+  message    String
+  year       Int
+  createdAt  DateTime @default(now())
+
+  @@unique([fromUserId, toUserId, year])
+  @@index([toUserId, year])
+}
+
+model ActivityLog {
+  id           String         @id @default(cuid())
+  action       ActivityAction
+  actorId      String?
+  actor        User?          @relation("actor", fields: [actorId], references: [id], onDelete: SetNull)
+  targetUserId String?
+  target       User?          @relation("target", fields: [targetUserId], references: [id], onDelete: SetNull)
+  ip           String?
+  userAgent    String?
+  createdAt    DateTime       @default(now())
+
+  @@index([action, createdAt])
+  @@index([targetUserId, createdAt])
+  @@index([actorId, createdAt])
+}
+
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  actor     User     @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  action    String
+  entity    String
+  entityId  String?
+  before    Json?
+  after     Json?
+  ip        String?
+  createdAt DateTime @default(now())
+
+  @@index([actorId, createdAt])
+  @@index([entity, entityId])
+}
+
+model DailyViewStats {
+  id             String   @id @default(cuid())
+  date           DateTime @db.Date
+  profileUserId  String
+  viewCount      Int
+  uniqueViewers  Int
+  createdAt      DateTime @default(now())
+
+  @@unique([date, profileUserId])
+  @@index([date])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}

@@ -1,0 +1,47 @@
+---
+description: Core rules for the Vada O/L 95 – A/L 98 members app
+globs:
+alwaysApply: true
+---
+
+# Project
+Private members-only bilingual (English + Tamil) web app for the "Vada" O/L 1995 / A/L 1998 old students of 13 Vadamarachchi schools. Domain: vada9598.online. Hosted on AWS EC2 Linux.
+Full spec: @BLUEPRINT.md. Progress and decisions: @AGENT.md. Read both before any task.
+
+# Stack (do not change without asking)
+Next.js 15 App Router + TypeScript (strict) · Tailwind CSS + shadcn/ui · Framer Motion · React Three Fiber + @react-three/drei · canvas-confetti · next-intl (member area only: en, ta) · Auth.js · PostgreSQL + Prisma · Zod · AWS S3 (media) · Amazon SES (email) · Recharts · Docker Compose + Nginx + Let's Encrypt on EC2 · GitHub Actions.
+
+# Roles
+MEMBER, ADMIN, SUPER_ADMIN. Super Admin: Mayooran. Admins: Mugunthan, Ramanan.
+
+# Non-negotiable rules
+1. Enforce role checks on the server in every route handler, server action and page. Never rely only on hiding UI.
+2. Enforce per-field visibility (All members / Admins only) in the data layer. Hidden fields must never reach member API responses.
+3. Every profile view writes exactly one ActivityLog row (VIEW_PROFILE, actorId, targetUserId, ip, userAgent, createdAt).
+4. Consent is mandatory before a profile is visible. Store type, notice version, timestamp and IP.
+4a. No Google Form and no CSV import. Members join only through the member details form on the public home page (/), which saves directly to PostgreSQL with status PENDING.
+4b. Member details are editable by ADMIN / SUPER_ADMIN only. There is no member-facing edit form; server actions and APIs reject MemberProfile writes from MEMBER. Members get a read-only profile + "Request a change" (ChangeRequest) and can change only their password and language.
+5. Member UI is EN + TA via next-intl; no hard-coded member-facing strings. The admin panel (/admin) is English only.
+6. Identity No. format is VADA-001 (zero-padded), assigned in a DB transaction on approval. Never reuse a number.
+7. Store all times in UTC and display them in the viewer's time zone. Birthdays: use the viewer's local date; 29 Feb is shown on 28 Feb in non-leap years.
+8. Deceased members: status DECEASED, excluded from birthdays, profile read-only.
+9. Write every Admin/Super Admin change to AuditLog. 2FA is required for ADMIN and SUPER_ADMIN.
+10. Validate all input with Zod on the server. Validate uploads (type and size); keep media private and serve it via signed URLs.
+11. Never commit secrets. Use .env with a .env.example.
+
+# UI / 3D design ("Vada Reunion — Navy & Gold")
+- Navy gradient #0B1530 → #13244D, gold #D4A84B, teal #2EC4B6, soft white text. Dark mode by default.
+- Glassmorphism cards (backdrop-blur, light border, soft glow), layered depth, 16–24px radius, 44px+ touch targets, mobile-first, bottom nav on phones.
+- Fonts: Inter/Poppins (EN), Noto Sans Tamil (TA, line-height ≥ 1.7).
+- 3D: React Three Fiber scenes loaded with next/dynamic (ssr:false) and lazy-loaded; CSS 3D transforms for tilt and flip.
+- Always respect prefers-reduced-motion and provide a fallback when WebGL is unavailable. 3D is an enhancement only; every feature must work without it.
+- Performance: DPR ≤ 1.5, low-poly, pause rendering off-screen; Lighthouse mobile performance ≥ 85.
+- Obituaries and In Memoriam are always calm: no 3D, tilt, confetti or bright color. Use muted grey/white, a soft glow and serif headings.
+- Admin panel: mostly flat, fast, tables + Recharts.
+
+# Way of working
+- Do one task at a time. Before writing code, briefly list the files you will create or change.
+- Keep scope to the current phase in AGENT.md. Ask before adding features not in BLUEPRINT.md.
+- Write typed, commented, production-quality code. No placeholder logic unless marked TODO.
+- After each task: run `npm run lint`, `npx tsc --noEmit` and the relevant tests, and fix errors.
+- At the end of every task, update AGENT.md: tick the checklist, add to the Decisions log and Session log, and write the next step.
