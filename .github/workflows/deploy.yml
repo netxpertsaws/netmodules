@@ -1,0 +1,43 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push images
+        run: |
+          IMAGE=ghcr.io/${{ github.repository }}
+          docker build --target runner -t "$IMAGE:app-${{ github.sha }}" .
+          docker build --target migrate -t "$IMAGE:migrate-${{ github.sha }}" .
+          docker push "$IMAGE:app-${{ github.sha }}"
+          docker push "$IMAGE:migrate-${{ github.sha }}"
+      - name: Deploy over SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: deploy
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script_stop: true
+          script: |
+            set -euo pipefail
+            cd /opt/vada9598
+            git pull --ff-only origin main
+            export APP_IMAGE=ghcr.io/${{ github.repository }}:app-${{ github.sha }}
+            export MIGRATE_IMAGE=ghcr.io/${{ github.repository }}:migrate-${{ github.sha }}
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d
+            curl --fail --retry 10 --retry-delay 3 http://127.0.0.1/api/health

@@ -1,0 +1,115 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root,
+[data-theme="dark"] {
+  --bg: #0b1530;
+  --bg-2: #13244d;
+  --text: #f4f7fb;
+  --muted: #b7c3d9;
+  --glass: rgba(255, 255, 255, 0.08);
+  --line: rgba(255, 255, 255, 0.16);
+  --gold: #d4a84b;
+  --teal: #2ec4b6;
+  --shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #f6f1e6;
+  --bg-2: #fffaf2;
+  --text: #0b1530;
+  --muted: #3e4d6b;
+  --glass: rgba(255, 255, 255, 0.72);
+  --line: rgba(11, 21, 48, 0.12);
+  --shadow: 0 18px 40px rgba(19, 36, 77, 0.12);
+  color-scheme: light;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  background:
+    radial-gradient(900px 500px at 10% -10%, rgba(212, 168, 75, 0.18), transparent 55%),
+    radial-gradient(800px 480px at 100% 0%, rgba(46, 196, 182, 0.14), transparent 50%),
+    linear-gradient(165deg, var(--bg), var(--bg-2));
+  font-family: var(--font-inter), var(--font-tamil), sans-serif;
+}
+
+html[lang="ta"] body {
+  line-height: 1.7;
+  font-family: var(--font-tamil), var(--font-inter), sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+  border-radius: 20px;
+}
+
+.memorial {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #f3f1ec;
+  border-radius: 20px;
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .memorial {
+  background: #f7f5f2;
+  color: #2c3138;
+  border-color: rgba(44, 49, 56, 0.12);
+}
+
+.field {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.04);
+  padding: 0.7rem 0.9rem;
+}
+
+textarea.field {
+  min-height: 120px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

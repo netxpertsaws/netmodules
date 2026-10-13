@@ -1,0 +1,203 @@
+{
+  "brand": { "name": "Vada 9598", "kicker": "O/L 1995 · A/L 1998" },
+  "nav": {
+    "join": "Join",
+    "login": "Sign in",
+    "home": "Home",
+    "members": "Members",
+    "events": "Events",
+    "album": "Album",
+    "obituaries": "Obituaries",
+    "achievements": "Achievements",
+    "memoriam": "In memoriam",
+    "profile": "Profile",
+    "account": "Account",
+    "logout": "Sign out"
+  },
+  "common": {
+    "language": "Language",
+    "light": "Light",
+    "dark": "Dark",
+    "next": "Continue",
+    "back": "Back",
+    "submit": "Submit",
+    "search": "Search",
+    "empty": "Nothing here yet.",
+    "saved": "Saved.",
+    "error": "Please try again.",
+    "loading": "Working…",
+    "close": "Close"
+  },
+  "home": {
+    "title": "The Vadamarachchi reunion",
+    "subtitle": "A private network for the O/L 1995 and A/L 1998 students of 13 Vadamarachchi schools.",
+    "cta": "Join — fill in your details",
+    "schools": "The thirteen schools",
+    "formTitle": "Member details"
+  },
+  "join": {
+    "steps": {
+      "account": "Account",
+      "identity": "Identity",
+      "school": "School",
+      "personal": "Personal",
+      "location": "Location",
+      "contact": "Contact",
+      "work": "Work",
+      "family": "Family",
+      "consent": "Consent",
+      "review": "Review"
+    },
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "fullName": "Full name",
+    "fullNameTa": "Name in Tamil",
+    "nickname": "Nickname",
+    "gender": "Gender",
+    "female": "Female",
+    "male": "Male",
+    "undisclosed": "Prefer not to say",
+    "dateOfBirth": "Date of birth",
+    "school": "School",
+    "stream": "A/L stream",
+    "admissionNo": "Admission number",
+    "city": "City",
+    "country": "Country",
+    "address": "Address",
+    "mobile": "Mobile",
+    "whatsapp": "WhatsApp",
+    "profession": "Profession",
+    "employer": "Employer",
+    "jobTitle": "Job title",
+    "maritalStatus": "Marital status",
+    "single": "Single",
+    "married": "Married",
+    "other": "Other",
+    "spouseName": "Spouse name",
+    "children": "Children",
+    "about": "About you",
+    "facebook": "Facebook",
+    "linkedin": "LinkedIn",
+    "instagram": "Instagram",
+    "website": "Website",
+    "photo": "Photo",
+    "photoHint": "JPEG, PNG or WebP, up to 5 MB. We store a private WebP copy.",
+    "visibilityMembers": "All members",
+    "visibilityAdmins": "Admins only",
+    "company": "Company website",
+    "streams": {
+      "MATHS": "Mathematics",
+      "BIO": "Biology",
+      "COMMERCE": "Commerce",
+      "ARTS": "Arts",
+      "TECHNOLOGY": "Technology",
+      "OTHER": "Other"
+    },
+    "consent": {
+      "intro": "Consent notice 2026-01. A profile stays hidden until an admin approves it.",
+      "directory": "I agree that approved members may see my profile.",
+      "photo": "I agree that approved members may see my photograph.",
+      "birthday": "I agree that members may see my birthday (day and month only).",
+      "contact": "I agree that members may see contact fields I mark as visible to all members.",
+      "accuracy": "I confirm this information is true and that I sat O/L in 1995 or A/L in 1998 at a Vadamarachchi school.",
+      "turnstile": "Complete the spam check before submitting."
+    },
+    "reviewHint": "Check the details, then submit. You can request changes later; you cannot edit the profile yourself."
+  },
+  "thankYou": {
+    "title": "Waiting for admin approval",
+    "body": "Your details are saved. An admin will review them. You can sign in after approval."
+  },
+  "login": {
+    "title": "Sign in",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign in",
+    "google": "Continue with Google",
+    "invalid": "Those details were not accepted.",
+    "rate": "Too many attempts. Wait a few minutes.",
+    "pending": "This account is not approved yet.",
+    "forbidden": "That area is for administrators.",
+    "timeout": "Your admin session expired. Sign in again."
+  },
+  "members": {
+    "title": "Directory",
+    "search": "Name or nickname",
+    "school": "School",
+    "country": "Country",
+    "city": "City",
+    "profession": "Profession",
+    "stream": "A/L stream",
+    "all": "All",
+    "previous": "Previous",
+    "next": "Next",
+    "inMemoriam": "In memoriam"
+  },
+  "profile": {
+    "title": "Profile",
+    "about": "About",
+    "school": "School",
+    "work": "Work",
+    "contact": "Contact",
+    "family": "Family",
+    "request": "Request a change",
+    "requestHint": "Tell the admins what should be updated. You cannot edit these details yourself.",
+    "send": "Send request",
+    "sent": "Request sent.",
+    "readOnly": "This profile is read-only.",
+    "deceased": "Remembered with respect"
+  },
+  "account": {
+    "title": "Account",
+    "password": "Change password",
+    "current": "Current password",
+    "next": "New password",
+    "confirm": "Confirm new password",
+    "save": "Save password",
+    "saved": "Password updated.",
+    "language": "Language",
+    "english": "English",
+    "tamil": "Tamil"
+  },
+  "birthdays": {
+    "today": "Today's birthdays",
+    "upcoming": "Next 7 days",
+    "none": "No birthdays in this window.",
+    "wish": "A short wish",
+    "send": "Send wish",
+    "sent": "Wish sent"
+  },
+  "events": {
+    "title": "Important events",
+    "empty": "No upcoming events."
+  },
+  "sections": {
+    "obituaries": "Obituaries",
+    "achievements": "Hall of achievement",
+    "memoriam": "In memoriam",
+    "album": "Our album",
+    "open": "Open"
+  },
+  "memorial": {
+    "obituary": "Obituary",
+    "memoriam": "In memoriam",
+    "condolence": "Leave a condolence",
+    "send": "Send",
+    "sent": "Sent."
+  },
+  "album": {
+    "title": "Our album",
+    "empty": "No albums yet."
+  },
+  "achievements": {
+    "title": "Hall of achievement",
+    "empty": "No achievements published yet."
+  },
+  "invite": {
+    "title": "Accept your invitation",
+    "body": "Choose a password and accept the consent notice. Your profile stays hidden until you do.",
+    "submit": "Activate membership",
+    "done": "You can sign in now."
+  }
+}
